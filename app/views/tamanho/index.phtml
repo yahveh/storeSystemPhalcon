@@ -1,0 +1,52 @@
+<?php
+
+require_once('../app/bootstrap.php');
+
+session_name('admin');
+if(!$_SESSION['logado']) {
+    header("Location: ../login.php?i=0");
+}
+?>
+
+<div class="container">
+    <div class="page-header">
+      <h1>Tamanhos <small>Total de tamanhos cadastrados: <?= $select->num_rows; ?></small></h1>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Tamanho</th>
+            <th>Açoes</th>
+        </tr>
+        </thead>
+        <?php foreach($tamanhos as $dados):  ?>
+        <tbody>
+        <tr>
+            <td width="70px;"><?= $dados['id']; ?></td>
+            <td width="100px;"><?= $dados['tamanho']; ?></td>
+            <td>
+                <a href="editar.php?e=<?= $dados['id']; ?>" class="btn btn-info disabled">Editar</a>
+                <?= $espaco; ?>
+                <a href="action.php?d=<?= $dados['id']; ?>"  class="btn btn-danger">Apagar</a>
+            </td>
+        </tr>
+        </tbody>
+
+    <?php endforeach; ?>
+    </table>
+
+
+<hr>
+
+<h1>Cadastrar Tamanho</h1><br>
+<form method="post" action="action.php?c=1" name="cadastro_tamanho">
+    <div class="form-group" style="width: 400px;">
+        <span>Tamanho:</span>
+        <input type="text" name="nome" required class="form-control">
+    </div>
+    <input type="reset" value="Limpar Dados" class="btn btn-danger"><?= $espaco2.$espaco2; ?>
+    <input type="submit" value="Cadastrar" class="btn btn-success">
+</form>
+<br>
+</div>

@@ -1,0 +1,73 @@
+<?php
+
+require_once('../app/bootstrap.php');
+
+session_name('admin');
+if($_SESSION['logado']) {
+
+
+if(isset($_GET['id'])){
+	$id = $_GET['id'];
+	$select = $conexao->query("SELECT * FROM produtos where id ={$id}")->fetch_assoc();
+}
+
+
+?>
+<div class="container col-md-4 col-md-offset-3">
+    <div class="page-header">
+      <h1><?php echo $select['nome']; ?> <small>Editar Produto</small></h1>
+    </div>
+
+	<form method="post" action="action.php?up=1&id=<?php echo $id; ?>">
+        <div class="form-group" style="width: 500px;">
+            <label>Nome: </label>
+            <input type="text" value="<?php echo $select['nome']; ?>" name="new_nome" required   class="form-control"/>
+            <label>Código: </label>
+            <input type="text" value="<?php echo $select['codigo']; ?>" disabled   class="form-control"/>
+            <label>Categoria: </label>
+            <input type="text" value="<?php echo array_search($select['categoria'], $categorias); ?>" disabled   class="form-control"/>
+            <label>Genero: </label>
+            <input type="text" value="<?php echo array_search($select['genero'], $generos); ?>" disabled  class="form-control" />
+            <label>Valor Custo: </label>
+            <input type="text" value="<?php echo $select['vlr_custo'];?>" name="new_vlr_custo" class="form-control" onKeyUp="moeda(this);" />
+            <label>Valor Venda: </label>
+            <input type="text" value="<?php echo $select['vlr_venda'];?>" name="new_vlr_venda" class="form-control" onKeyUp="moeda(this);" />
+            <label>Detalhes: </label>
+            <input type="text" value="<?php echo $select['detalhes']; ?>" name="new_detalhes"  class="form-control"/>
+            <label>Observacoes: </label>
+            <input type="text" value="<?php echo $select['observacoes']; ?>" name="new_observacoes"   class="form-control"/><br>
+            <label>Estoques por tamanho: </label><br>
+        <?php
+        $select2 = $conexao->query("SELECT * FROM produtos_tamanhos where id_produto = $id");
+        while($retorno = $select2->fetch_assoc()){
+            extract($retorno);
+            $tamanho = array_search($id_tamanho, $tamanhos);
+            $resultado[$tamanho] = $estoque;    
+        }
+
+        $i=0;
+        foreach($tamanhos as $keys => $try){
+            echo "<select name='tamanho$i'  >";
+            echo "<option value='$try'>";
+            echo $keys;
+            echo "</option>";
+            echo "</select>";
+            echo " <label>  &nbsp;&nbsp;&nbsp;&nbsp;Qtd: </label>";
+            if($valor = $resultado[$keys])
+                echo "<input type='number' min='0' name='qtd_tam$i' value='$valor'><br><br>";
+            else
+                echo "<input type='number' min='0' name='qtd_tam$i'><br><br>";
+            $i++;
+        }
+        ?>
+            <div style="float: right;">
+                <input type="submit" value="Atualizar" class='btn btn-success'>
+                <br><br>
+            </div>
+        </div>
+	</form>
+</div>
+<?php
+}else {
+    header("Location: ../login.php?i=0");
+}

@@ -1,0 +1,22 @@
+<?php
+
+require_once('../app/bootstrap.php');
+
+?>
+<div class="table table-responsive" style="width: 330px; margin: 150px 0 0 450px; border:0.5px solid #003cb3; padding: 15px">
+
+    <form method="post" action="/lojaPhalcon/signin/getLogin" name="login">
+        <div class="form-group" style="width: 300px;">
+            <label>Login:</label>
+            <input type="text" name="login"  class="form-control" required>
+            <label>Senha:</label>
+            <input type="password" name="senha"  class="form-control" required>
+            <br>
+            <input type="reset" value="Limpar" class="btn btn-danger">
+            <div style="float:right;">
+            <button type="submit" class="btn btn-success">Logar</button>
+            </div>
+        </div>
+    </form>
+
+</div>

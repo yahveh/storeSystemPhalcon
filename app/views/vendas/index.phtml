@@ -1,0 +1,73 @@
+<?php
+
+require_once('../app/bootstrap.php');
+
+
+if(!$_SESSION['logado']) {
+    header("Location: ../login.php?i=0");
+}
+
+$qtd_vendas = $select->num_rows;
+
+?>
+<div class="container">
+    <div class="page-header">
+      <h1>Vendas <small>Total de vendas: <?= $qtd_vendas; ?></small></h1>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Cod. Venda:</th>
+
+                <?php if(!isset($cliente)) echo "<th>Cliente</th>"; ?>
+                
+                <th>Data</th>
+                <th>Valor Total</th>
+                <th>Forma Pagamento</th>
+                <th>Status Pagamento</th>
+                <th>Qtd Itens</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+
+    <?php $vdd = false;
+        if($vdd)
+        while($ret = $select->fetch_assoc()):
+            extract($ret);
+            $id = $ret['id'];
+            $select2 = $conexao->query("SELECT * FROM vendas_itens where id_pedido = {$id}");
+            $qtd_itens = $select2->num_rows;
+
+            if($filter == false){
+               $select2 = $conexao->query("SELECT nome FROM clientes where id = {$id_cliente}")->fetch_assoc();
+                $nome_cliente = $select2['nome'];
+            }
+    ?>
+        <tbody>
+            <tr>
+            <td><?= $id; ?></td>
+            <?php if(!isset($cliente)) 
+                echo '<td>'.normalize($nome_cliente).'</td>';
+            ?>
+            <td><?= formatData($data); ?></td>
+            <td><?= 'R$ '.number_format($vlr_total,2,',','.'); ?></td>
+            <td><?= $forma_pgto; ?></td>
+            <td><?= getStatusPgto($status_pgto); ?></td>
+            <td><?= $total_itens; ?></td>
+            <td><a href="listar.php?id=<?= $id; ?>"  class="btn btn-info">Detalhes</a>&nbsp;&nbsp;
+            <a href="actions.php?del=1&id=<?=  $id; ?>"  class="btn btn-danger">Apagar</a></td>
+            </tr>
+        </tbody>
+    <?php endwhile; ?>
+
+        </table>
+    </div>
+
+    
+<br>
+    <?php if(isset($cliente)): ?>
+        <a href="cadastra.php?id=<?= $cliente; ?>" class="btn btn-success">Cadastrar Venda</a>
+    <?php endif; ?>
+    </div>
+<br>

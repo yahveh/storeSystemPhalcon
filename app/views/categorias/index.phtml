@@ -1,0 +1,46 @@
+<?php
+
+require_once('../app/bootstrap.php');
+
+?>
+<div class="container">
+    <div class="page-header">
+      <h1>Categorias <small>Total de categorias cadastradas: <?php echo $select->num_rows; ?></small></h1>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Categoria</th>
+            <th>Açoes</th>
+        </tr>
+        </thead>
+        <?php foreach($categorias as $dados):  ?>
+            <tbody>
+            <tr>
+                <td width="50px;"><?= $dados['id']; ?></td>
+                <td width="150px;"><?= $dados['nome']; ?></td>
+                <td width="250px;">
+                    <a href="editar.php?e=<?= $dados['id']; ?>" class="btn btn-info disabled">Editar</a>
+                    <?php echo $espaco; ?>
+                    <a href="action.php?d=<?= $dados['id']; ?>"  class="btn btn-danger">Apagar</a>
+                </td>
+            </tr>
+            </tbody>
+
+        <?php endforeach; ?>
+    </table>
+
+    <hr>
+
+    <h1>Cadastrar Categoria</h1><br>
+    <form method="post" action="action.php?c=1" name="cadastro_categoria">
+        <div class="form-group" style="width: 400px;">
+            <span>Nome:</span>
+            <input type="text" name="nome" required class="form-control">
+        </div>
+        <input type="reset" value="Limpar Dados" class="btn btn-danger"><?= $espaco2.$espaco2; ?>
+        <input type="submit" value="Cadastrar" class="btn btn-success">
+    </form>
+    <hr>
+</div>
